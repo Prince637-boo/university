@@ -42,3 +42,20 @@ Les tests sont gérés pour le moment par pytest vous pouver les voir dans [./ap
 ## Migrations
 
 Les migrations sont faites par Alembic par `alembic` et ça dépend du type de migration. 
+
+## ERREUR
+
+Nos tests démarrent et la fixture setup_database dans conftest.py est exécutée.
+
+Elle appelle init_db qui, à son tour, appelle get_password_hash.
+C'est le premier appel à passlib, qui déclenche son initialisation.
+
+Lors de cette initialisation, passlib effectue un auto-test sur la bibliothèque bcrypt avec un mot de passe de plus de 72 octets.
+
+Même si j'ai  correctement configuré bcrypt__truncate_error=True, le problème est que j'ai deux instances de CryptContext dans le projet. Une dans app/core/security.py (bien configurée) et une autre dans app/crud/users.py (implicitement utilisée via get_password_hash et verify_password).
+
+
+Le souci est donc que la version de passlib que  j'utilise semble avoir un comportement où la configuration bcrypt__truncate_error=True n'est pas prise en compte lors de ce tout premier test d'initialisation si la structure du projet n'est pas parfaitement linéaire.
+
+j'ai essayer tout pour résoudre çà mais soit le problème change carrement soit ça augmene donc je te laisse faire
+
