@@ -604,7 +604,7 @@ Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
 
 ## 👥 Auteurs
 
-- **Équipe Backend ML** - Système d'orientation académique
+- **Équipe Backend ML** - @prince637-boo
 - **École d'Aéronautique et Technologies Avancées**
 
 ---
@@ -620,7 +620,7 @@ Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
 ## 📞 Contact
 
 Pour toute question ou suggestion:
-- Email: orientation@ecole-aero.edu
+- Email: i8674333@gmail.com
 - Issues: GitHub Issues
 - Documentation: Wiki du projet
 
@@ -656,4 +656,4 @@ Vous avez maintenant un système d'orientation intelligent prêt à être intég
 
 ---
 
-*Dernière mise à jour: Octobre 2025*
+*Dernière mise à jour: avril 2026*
