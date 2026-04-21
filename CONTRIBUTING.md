@@ -10,7 +10,7 @@ Merci de votre intérêt pour contribuer à ce projet !
 4. **Ajoutez des tests** si nécessaire.
 5. **Validez vos changements** (`git commit -m "Ajout d'une fonctionnalité"`).
 6. **Poussez la branche** sur votre fork (`git push origin ma-fonctionnalite`).
-7. **Ouvrez une Pull Request** en décrivant clairement vos modifications.
+7. **Ouvrez une Pull Request** en décrivant clairement vos modifications et en suivant le model pour les PR.
 
 ## Bonnes pratiques
 
@@ -20,6 +20,6 @@ Merci de votre intérêt pour contribuer à ce projet !
 
 ## Questions
 
-Pour toute question, ouvrez une issue ou contactez les mainteneurs du projet.
+Pour toute question, ouvrez une issue ou contactez les mainteneurs du projet.(@prince637-boo, @Trésor)
 
 Merci pour votre contribution !

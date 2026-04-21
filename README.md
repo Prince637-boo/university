@@ -1,7 +1,7 @@
 # University
 
 
-## Technologies and Fonctionalités
+## Technologies et Fonctionalités
 
 - ⚡ [**FastAPI**](https://fastapi.tiangolo.com) pour l'API python backend.
     - 🧰 [SQLModel](https://sqlmodel.tiangolo.com) pour la base de donnée SQL interaction (ORM).
