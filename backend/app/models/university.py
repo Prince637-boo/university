@@ -20,6 +20,7 @@ class Course(Base):
     parcours = relationship("Program", back_populates="courses")
     enrollments = relationship("Enrollment", back_populates="courses")
     teachers_assoc = relationship("TeachCourse", back_populates="course")
+    grades = relationship("Grade", back_populates="course")
 
 # Parcours/Filière
 class Program(Base):

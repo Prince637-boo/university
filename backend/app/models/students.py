@@ -45,14 +45,15 @@ class Student(Base):
     # qr_path = Column(String(200))
 
     # id_user = Column(Integer, ForeignKey("users.id"), nullable=True)
-    id_departement = Column(Integer, ForeignKey("departements.id"), nullable=True)
-    id_parcours = Column(Integer, ForeignKey("parcours.id"), nullable=True)
+    id_departement = Column(UUID(as_uuid=True), ForeignKey("departements.id"), nullable=True)
+    id_parcours = Column(UUID(as_uuid=True), ForeignKey("parcours.id"), nullable=True)
 
     user = relationship("User", back_populates="student")
     departement = relationship("Department", back_populates="students")
     parcours = relationship("Program", back_populates="students")
     enrollments = relationship("Enrollment", back_populates="student")
     medias = relationship("Media", back_populates="student")
+    grades = relationship("Grade", back_populates="student")
 
 @event.listens_for(Student, "before_insert")
 def generer_id_etudiant(mapper, connection, target):

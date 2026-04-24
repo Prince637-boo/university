@@ -11,6 +11,7 @@ class Semester(Base):
     name = Column(String(50), nullable=False)  # ex: "Semestre 1"
 
     enrollments = relationship("Enrollment", back_populates="semester")
+    grades = relationship("Grade", back_populates="semester")
     
 
 
@@ -19,9 +20,9 @@ class Enrollment(Base):
     
     id = Column(UUID(as_uuid=True), default=uuid.uuid4, primary_key=True, index=True)
 
-    student_id = Column(Integer, ForeignKey("etudiants.id"), nullable=False)
-    course_id = Column(Integer, ForeignKey("cours.id"), nullable=False) 
-    semester_id = Column(Integer, ForeignKey("semesters.id"), nullable=True)
+    student_id = Column(UUID(as_uuid=True), ForeignKey("etudiants.id"), nullable=False)
+    course_id = Column(UUID(as_uuid=True), ForeignKey("cours.id"), nullable=False) 
+    semester_id = Column(UUID(as_uuid=True), ForeignKey("semesters.id"), nullable=True)
     
     student = relationship("Student", back_populates="enrollments")
     courses = relationship("Course", back_populates="enrollments")

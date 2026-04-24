@@ -69,6 +69,9 @@ class Settings(BaseSettings):
     # ===== Environment =====
     ENVIRONMENT: str = Field(default="development")
     
+    # ===== AI Chatbot =====
+    HUGGINGFACE_API_KEY: str = Field(default="")
+    
     def get_allowed_origins(self) -> List[str]:
         """Parse ALLOWED_ORIGINS string into list"""
         return [origin.strip() for origin in self.ALLOWED_ORIGINS.split(",")]

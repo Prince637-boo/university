@@ -19,15 +19,15 @@ def get_university_context(db: Session) -> str:
     try:
         # Récupérer les programmes
         programs_data = crud_programs.read_programs(db=db, skip=0, limit=100).data
-        programs_context = "\n".join([f"- {p.name}: {p.description}" for p in programs_data])
+        programs_context = "\n".join([f"- {p.nom}: {p.description}" for p in programs_data])
         
         # Récupérer les départements
         departments_data = crud_departments.read_departement(db=db, skip=0, limit=100).data
-        departments_context = "\n".join([f"- {d.name}" for d in departments_data])
+        departments_context = "\n".join([f"- {d.nom}" for d in departments_data])
         
         # Récupérer quelques cours en exemple
         courses_data = crud_courses.read_courses(db=db, skip=0, limit=20).data # Limité pour ne pas surcharger
-        courses_context = "\n".join([f"- {c.title}: {c.description}" for c in courses_data])
+        courses_context = "\n".join([f"- {c.titre}: {c.description}" for c in courses_data])
         
         context = f"""
 ### Filières Disponibles

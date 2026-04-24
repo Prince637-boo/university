@@ -5,7 +5,7 @@ from sqlalchemy import select
 
 from app.models.users import User
 from app.schemas.users import UserUpdate, UserCreate, UserPublic
-from app.core.security import verify_password
+from app.core.security import verify_password, get_password_hash
 
 
 def create_user(*, db: Session, user_data: UserCreate) -> UserPublic:
@@ -13,7 +13,7 @@ def create_user(*, db: Session, user_data: UserCreate) -> UserPublic:
     db_user = User(
         username=user_data.username,
         full_name=user_data.full_name,
-        hashed_password=user_data.password,  # Le mot de passe est maintenant attendu comme étant déjà haché
+        hashed_password=get_password_hash(user_data.password),
         is_active=user_data.is_active,
         is_superuser=user_data.is_superuser,
         student_id=user_data.student_id if hasattr(user_data, "student_id") else None
