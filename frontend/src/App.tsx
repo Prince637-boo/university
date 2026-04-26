@@ -8,6 +8,13 @@ import Liste from "./pages/Liste";
 import Enr from './pages/Enr';
 import EtudiantProfile from './pages/EtudiantProfile';
 import EditEtudiant from './pages/EditEtudiant';
+import FacultiesPage from './pages/Faculties';
+import DepartmentsPage from './pages/Departments';
+import ProgramsPage from './pages/Programs';
+import CoursesPage from './pages/Courses';
+import TeachersPage from './pages/Teachers';
+import UsersPage from './pages/Users';
+import SettingsPage from './pages/Settings';
 import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 
@@ -59,14 +66,14 @@ function App() {
             <Route path="students/:id" element={<EtudiantProfile />} />
             <Route path="students/:id/edit" element={<EditEtudiant />} />
 
-            {/* Routes pour les autres entités - à implémenter */}
-            <Route path="faculties" element={<div>Page Facultés - À implémenter</div>} />
-            <Route path="departments" element={<div>Page Départements - À implémenter</div>} />
-            <Route path="programs" element={<div>Page Parcours - À implémenter</div>} />
-            <Route path="courses" element={<div>Page Cours - À implémenter</div>} />
-            <Route path="teachers" element={<div>Page Enseignants - À implémenter</div>} />
-            <Route path="users" element={<div>Page Utilisateurs - À implémenter</div>} />
-            <Route path="settings" element={<div>Page Paramètres - À implémenter</div>} />
+            {/* Routes pour les autres entités */}
+            <Route path="faculties" element={<FacultiesPage />} />
+            <Route path="departments" element={<DepartmentsPage />} />
+            <Route path="programs" element={<ProgramsPage />} />
+            <Route path="courses" element={<CoursesPage />} />
+            <Route path="teachers" element={<TeachersPage />} />
+            <Route path="users" element={<UsersPage />} />
+            <Route path="settings" element={<SettingsPage />} />
           </Route>
         </Routes>
       </Router>
