@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { toast } from "react-toastify";
+import { studentService } from '../services/students';
 
 const FormContainer = styled.div`
   background: #fff;
@@ -58,36 +59,28 @@ const Title = styled.h2`
   letter-spacing: 1px;
 `;
 
-export const Enr = () => {
+const Enr = () => {
   const [name, setname] = useState("");
   const [prenom, setprenom] = useState("");
   const [sexe, setSexe] = useState("")
   const navigate = useNavigate();
 
-  const url = "http://127.0.0.1:8000/enregistrer_etudiant/";
-
-  function enregistrer() {
-    fetch(url, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        Autorization: "Bearer",
-      },
-      body: JSON.stringify({nom: name, prenom: prenom,  sexe: sexe }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          toast.success("Etudiant Enrégistré avec succes");
-          setTimeout(() => {
-            navigate(`/etudiant/${data.id}`);
-          }, 1200);
-        } else {
-          toast.error("Une erreur s'est produite. Veuillez réessayer")
-        }
-      })
-      .catch((error) => console.log(error));
-  }
+  const enregistrer = async () => {
+    try {
+      const created = await studentService.createStudent({
+        nom: name,
+        prenom,
+        sexe,
+      });
+      toast.success('Étudiant enregistré avec succès');
+      setTimeout(() => {
+        navigate(`/students/${created.id}`);
+      }, 1200);
+    } catch (error) {
+      console.error(error);
+      toast.error("Une erreur s'est produite. Veuillez réessayer");
+    }
+  };
 
   return (
     <FormContainer>
@@ -113,3 +106,5 @@ export const Enr = () => {
     </FormContainer>
   );
 };
+
+export default Enr;

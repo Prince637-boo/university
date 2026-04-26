@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { toast } from "react-toastify";
+import { studentService } from '../services/students';
 
 const FormContainer = styled.div`
   background: #fff;
@@ -59,12 +60,12 @@ const Title = styled.h2`
 `;
 
 interface Etudiant {
-  id: number;
-  id_etudiant: number;
+  id: string;
+  id_etudiant: string;
   nom: string;
   prenom: string;
   sexe: string;
-  date_creation: number;
+  date_creation: string | number;
 }
 
 const EditEtudiant = () => {
@@ -78,66 +79,53 @@ const EditEtudiant = () => {
   const navigate = useNavigate();
 
     useEffect(() => {
-      fetch(`http://127.0.0.1:8000/etudiant/${id}`)
-        .then((res) => {
-        if (!res.ok) throw new Error("Erreur réseau");
-        return res.json();
-        })
-        .then((data) => {
+      const loadStudent = async () => {
+        if (!id) return;
 
-          if (data) {
+        try {
+          const data = await studentService.getStudent(id);
+          setEtudiant({
+            id: data.id,
+            id_etudiant: data.id_etudiant,
+            nom: data.nom,
+            prenom: data.prenom,
+            sexe: data.sexe ?? '',
+            date_creation: data.date_inscription ?? 0,
+          });
+          setpk(data.id);
+          setNom(data.nom);
+          setPrenom(data.prenom);
+          setSexe(data.sexe ?? '');
+        } catch (error) {
+          console.error(error);
+          toast.error('Erreur lors de la récupération des données.');
+        }
+      };
 
-            setEtudiant({
-              id: data.id,
-              id_etudiant: data.id_etudiant,
-              nom: data.nom,
-              prenom: data.prenom,
-              sexe: data.sexe,
-              date_creation: data.date_creation,
-            });
-            setpk(data.id)
-            console.log(data.id)
-            setNom(data.nom);
-            setPrenom(data.prenom);
-            setSexe(data.sexe);
-
-          } else {
-            toast.error("Etudiant non trouvé");
-          }
-        })
-
-        .catch(() => {
-        toast.error("Erreur lors de la récupération des données.");
-        });
-
+      loadStudent();
     }, [id]);
 
-  function handleSubmit(e: React.FormEvent) {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    fetch(`http://127.0.0.1:8000/modifier_etudiant/${pk}`, {
-      method: "PUT",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({
-        nom: nom,
-        prenom: prenom,
-        sexe: sexe
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data) {
-            toast.success(`Etudiant ${id} enrégistré avec succes`);
-            setTimeout(() => {
-                navigate(`/etudiant/${id}`);
-            }, 1200);
-            
-        } else {
-            toast.error("Une erreur s'est produite. Veuillez recommencer");
-        }
-        
+    try {
+      if (!pk) {
+        throw new Error('Identifiant manquant');
+      }
+      await studentService.updateStudent(pk, {
+        nom,
+        prenom,
+        sexe,
       });
-  }
+      toast.success(`Étudiant ${id} enregistré avec succès`);
+      setTimeout(() => {
+        navigate(`/students/${id}`);
+      }, 1200);
+    } catch (error) {
+      console.error(error);
+      toast.error("Une erreur s'est produite. Veuillez recommencer");
+    }
+  };
 
   if (!etudiant) return <FormContainer>Chargement...</FormContainer>;
 

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import {  FaUser } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { studentService } from '../services/students';
 
 const FullPageContainer = styled.div`
   min-height: 100vh;
@@ -108,8 +109,8 @@ const DeleteButton = styled.button`
 const EtudiantProfile = () => {
 
   interface Etudiant {
-  id: number;
-  id_etudiant: number;
+  id: string;
+  id_etudiant: string;
   nom: string;
   prenom: string;
   sexe: string;
@@ -121,45 +122,45 @@ const EtudiantProfile = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:8000/etudiant/${id}`)
-      .then((res) => {
-      if (!res.ok) throw new Error("Erreur réseau");
-      return res.json();
-      })
-      .then((data: Etudiant) => {
-        console.log(data)
-      setEtudiant({
-        id: data.id,
-        id_etudiant: data.id_etudiant,
-        nom: data.nom,
-        prenom: data.prenom,
-        sexe: data.sexe,
-        date_creation: data.date_creation,
-      });
-      })
-      .catch(() => {
-      toast.error("Erreur lors de la récupération des données.");
-      });
+    const loadStudent = async () => {
+      if (!id) return;
+
+      try {
+        const data = await studentService.getStudent(id);
+        setEtudiant({
+          id: data.id,
+          id_etudiant: data.id_etudiant,
+          nom: data.nom,
+          prenom: data.prenom,
+          sexe: data.sexe ?? '',
+          date_creation: data.date_inscription ?? '',
+        });
+      } catch (error) {
+        console.error(error);
+        toast.error("Erreur lors de la récupération des données.");
+      }
+    };
+
+    loadStudent();
   }, [id]);
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (
-      window.confirm(
+      !window.confirm(
         "Êtes-vous sûr de vouloir supprimer cet étudiant ? Cette action est irréversible."
       )
     ) {
-      fetch(`http://127.0.0.1:8000/effacer_etudiant/${id}`, {
-        method: "DELETE",
-      })
-        .then((res) => {
-          if (res.ok) {
-            toast.warning("Étudiant supprimé.");
-            navigate("/liste");
-          } else {
-            toast.error("Erreur lors de la suppression.");
-          }
-        })
-        .catch(() => toast.error("Erreur lors de la suppression."));
+      return;
+    }
+
+    try {
+      if (!id) return;
+      await studentService.deleteStudent(id);
+      toast.warning("Étudiant supprimé.");
+      navigate('/students');
+    } catch (error) {
+      console.error(error);
+      toast.error("Erreur lors de la suppression.");
     }
   };
 
@@ -202,7 +203,7 @@ const EtudiantProfile = () => {
           </InfoList>
         </FlexDiv>
         <ButtonGroup>
-          <EditButton onClick={() => navigate(`/editer/${etudiant.id_etudiant}`)}>
+          <EditButton onClick={() => navigate(`/students/${etudiant.id}/edit`)}>
             Modifier le profil
           </EditButton>
           <DeleteButton onClick={handleDelete}>Supprimer</DeleteButton>

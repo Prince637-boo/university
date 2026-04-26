@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import {toast} from 'react-toastify'
+import { toast } from 'react-toastify';
+import { studentService } from '../services/students';
 
 const TableContainer = styled.div`
   background: #fff;
@@ -103,80 +104,72 @@ const Title = styled.h2`
 `;
 
 interface Etudiant {
-  id: number;
+  id: string;
   id_etudiant: string;
   nom: string;
   prenom: string;
 }
 
 function Liste() {
-  const [liste, setListe] = useState([]);
+  const [liste, setListe] = useState<Etudiant[]>([]);
   const [filters, setFilters] = useState({
     id_etudiant: "",
     nom: "",
     prenom: "",
     date: "",
   });
-  const [hoveredRow, setHoveredRow] = useState<number | null>(null);
+  const [hoveredRow, setHoveredRow] = useState<string | null>(null);
   const navigate = useNavigate();
-  const url = "http://127.0.0.1:8000/etudiants";
 
   useEffect(() => {
-    fetch(url)
-      .then((res) => res.json())
-      .then((data) => {
-        const formatted = data.map((item: Etudiant) => ({
-          id: item.id,
-          id_etudiant: item.id_etudiant,
-          nom: item.nom,
-          prenom: item.prenom
-        }));
-        console.log(data)
-        setListe(formatted);
-      })
-      .catch((err) => console.error("Erreur:", err));
+    const loadStudents = async () => {
+      try {
+        const response = await studentService.getStudents();
+        setListe(response.data ?? []);
+      } catch (err) {
+        console.error('Erreur:', err);
+      }
+    };
+
+    loadStudents();
   }, []);
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
   };
 
-  const filteredListe = liste.filter((student) =>
-    Object.entries(filters).every(([key, value]) =>
-      String(student[key] ?? "")
-        .toLowerCase()
-        .includes(value.toLowerCase())
-    )
-  );
+  const filteredListe = liste.filter((student) => {
+    return (
+      student.id_etudiant.toLowerCase().includes(filters.id_etudiant.toLowerCase()) &&
+      student.nom.toLowerCase().includes(filters.nom.toLowerCase()) &&
+      student.prenom.toLowerCase().includes(filters.prenom.toLowerCase())
+    );
+  });
 
-  const handleEdit = (e: React.MouseEvent, id: number) => {
+  const handleEdit = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
-    navigate(`/editer/${id}`);
+    navigate(`/students/${id}/edit`);
   };
 
-  const handleDelete = (e: React.MouseEvent,id_etudiant: string, id: number) => {
+  const handleDelete = async (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
-    if (window.confirm("Voulez-vous supprimer cet étudiant ?")) {
-     
-            fetch(`http://127.0.0.1:8000/effacer_etudiant/${id}`, {
-              method: "DELETE",
-            })
-              .then((res) => {
-                if (res.ok) {
-                  toast.warning("Vous avez supprimé un étudiant.");
-                  setListe((prev) => prev.filter((etudiant: Etudiant) => etudiant.id_etudiant !== id_etudiant))
-                } else {
-                  toast.error("Erreur lors de la suppression.");
-                }
-              })
-              .catch(() => toast.error("Erreur lors de la suppression."));
-          
+    if (!window.confirm("Voulez-vous supprimer cet étudiant ?")) {
+      return;
+    }
+
+    try {
+      await studentService.deleteStudent(id);
+      toast.warning("Vous avez supprimé un étudiant.");
+      setListe((prev) => prev.filter((etudiant) => etudiant.id !== id));
+    } catch (error) {
+      console.error(error);
+      toast.error("Erreur lors de la suppression.");
     }
   };
 
-  const handleRowClick = (id: number) => {
+  const handleRowClick = (id: string) => {
     // Naviguer vers la page de profil de l'étudiant
-    navigate(`/etudiant/${id}`);
+    navigate(`/students/${id}`);
   };
 
   return (
@@ -238,7 +231,7 @@ function Liste() {
                     </ActionButton>
                     <ActionButton
                       title="Supprimer"
-                      onClick={(e) => handleDelete(e, student.id_etudiant, student.id)}
+                      onClick={(e) => handleDelete(e, student.id)}
                     >
                       <FaTrash />
                     </ActionButton>

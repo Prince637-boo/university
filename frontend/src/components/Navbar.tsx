@@ -1,29 +1,98 @@
-import '../styles/Navbar.css'
-import { Link } from 'react-router-dom'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import { useAuth } from '../contexts/AuthContext';
+import { FaSignOutAlt, FaUser } from 'react-icons/fa';
 
-export  const Navbar  = () => {
+const NavbarContainer = styled.nav`
+  position: fixed;
+  top: 0;
+  left: 250px; /* Largeur de la sidebar */
+  right: 0;
+  height: 70px;
+  background: white;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30px;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+`;
+
+const NavbarLeft = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 20px;
+`;
+
+const NavbarTitle = styled.h1`
+  margin: 0;
+  color: #333;
+  font-size: 1.5rem;
+  font-weight: 600;
+`;
+
+const NavbarRight = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 20px;
+`;
+
+const UserInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #666;
+`;
+
+const LogoutButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background: #c82333;
+  }
+`;
+
+const Navbar: React.FC = () => {
+  const { user, logout, isAuthenticated } = useAuth();
+
   return (
-    <>
+    <NavbarContainer>
+      <NavbarLeft>
+        <NavbarTitle>Système de Gestion Scolaire</NavbarTitle>
+      </NavbarLeft>
 
-      <nav>
-      <ul>
-        {/* <li>
-          <Link className='link' to="/liste">Liste des Étudiants</Link>
-        </li> */}
-        <li>
-          {/* <Link className='link enre '>
-              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M440-120v-240h80v80h320v80H520v80h-80Zm-320-80v-80h240v80H120Zm160-160v-80H120v-80h160v-80h80v240h-80Zm160-80v-80h400v80H440Zm160-160v-240h80v80h160v80H680v80h-80Zm-480-80v-80h400v80H120Z"/></svg>
-              Filtrer la liste 
-           </Link> */}
-        </li>
-        <li>
-          <Link className='link enre' to="/enregistrer">
-            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg> Ajouter un Étudiant
+      <NavbarRight>
+        {isAuthenticated && user ? (
+          <>
+            <UserInfo>
+              <FaUser />
+              <span>{user.full_name}</span>
+            </UserInfo>
+            <LogoutButton onClick={logout}>
+              <FaSignOutAlt />
+              Déconnexion
+            </LogoutButton>
+          </>
+        ) : (
+          <Link to="/login" style={{ color: '#007bff', textDecoration: 'none' }}>
+            Connexion
           </Link>
-        </li>
-      </ul>
-    </nav>
+        )}
+      </NavbarRight>
+    </NavbarContainer>
+  );
+};
 
-    </>
-  )
-}
+export default Navbar;
