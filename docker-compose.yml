@@ -12,7 +12,7 @@ services:
       backend:
         condition: service_healthy
     environment:
-      - VITE_API_URL=http://backend:8000/api/v1
+      - VITE_API_URL=/api/v1
       - VITE_APP_ENV=production
     networks:
       - university-network

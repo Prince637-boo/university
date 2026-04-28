@@ -3,6 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.settings import settings
 from app.api.main import api_router
+# Import tous les modèles pour assurer le chargement correct des mappers SQLAlchemy
+from app import models  # noqa: F401
 
 app = FastAPI(
     title=settings.PROJECT_NAME,

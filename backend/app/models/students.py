@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import UUID
+from sqlalchemy import String
 from sqlalchemy import Column, Integer, String, DateTime, Date
 from sqlalchemy.sql import func
 
@@ -17,7 +17,7 @@ from app.models.media import Media
 class Student(Base):
     __tablename__ = "etudiants"
 
-    id = Column(UUID(as_uuid=True), default=uuid.uuid4, primary_key=True, index=True)
+    id = Column(String(36), default=lambda: str(uuid.uuid4()), primary_key=True, index=True)
     id_etudiant = Column(String(50), unique=True, index=True, nullable=False)
     nom = Column(String(100), index=True, nullable=False)
     prenom = Column(String(100), index=True, nullable=False)
@@ -44,9 +44,9 @@ class Student(Base):
     date_creation = Column(DateTime(timezone=True), server_default=func.now())
     # qr_path = Column(String(200))
 
-    # id_user = Column(Integer, ForeignKey("users.id"), nullable=True)
-    id_departement = Column(UUID(as_uuid=True), ForeignKey("departements.id"), nullable=True)
-    id_parcours = Column(UUID(as_uuid=True), ForeignKey("parcours.id"), nullable=True)
+    # id_user = Column(String(36), ForeignKey("users.id"), nullable=True)
+    id_departement = Column(String(36), ForeignKey("departements.id"), nullable=True)
+    id_parcours = Column(String(36), ForeignKey("parcours.id"), nullable=True)
 
     user = relationship("User", back_populates="student")
     departement = relationship("Department", back_populates="students")

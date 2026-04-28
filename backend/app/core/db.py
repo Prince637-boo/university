@@ -16,14 +16,14 @@ def init_db(db: Session) -> None:
         select(User).where(User.username==settings.FIRST_SUPERUSER)
     ).first()
     if not user:
-        # Bcrypt a une limite de 72 octets pour les mots de passe.
-        # On tronque pour s'assurer que la limite n'est jamais dépassée.
-        # passlib gère automatiquement la troncature pour bcrypt,
-        # il n'est donc pas nécessaire de le faire manuellement ici.
+        # Use the password from settings, or a default if it's too short for the schema
+        plain_password = settings.FIRST_SUPERUSER_PASSWORD
+        if not plain_password or len(plain_password) < 8:
+            plain_password = "admin123"
+            
         user_in = UserCreate(
             username=settings.FIRST_SUPERUSER,
-            # Le mot de passe sera haché avant d'être passé à create_user
-            password=get_password_hash(settings.FIRST_SUPERUSER_PASSWORD),
+            password=plain_password,
             is_superuser=True
         )
         user = users.create_user(db=db, user_data=user_in)

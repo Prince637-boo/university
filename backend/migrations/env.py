@@ -1,12 +1,13 @@
 from logging.config import fileConfig
-
+import os
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
 
 
-from app.models.students import Base
+from app.core.config import Base
+from app.models import User, Token, Media, Faculty, Department, Program, Course, TeachCourse, Student, Teacher, Semester, Enrollment, Grade
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -60,8 +61,16 @@ def run_migrations_online() -> None:
     and associate a connection with the context.
 
     """
+    # Lire la database URL depuis les variables d'environnement pour Docker
+    # Sinon utiliser la valeur par défaut du fichier alembic.ini
+    from app.core.settings import settings
+    database_url = str(settings.SQLALCHEMY_DATABASE_URI)
+    
+    configuration = config.get_section(config.config_ini_section, {})
+    configuration["sqlalchemy.url"] = database_url
+    
     connectable = engine_from_config(
-        config.get_section(config.config_ini_section, {}),
+        configuration,
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
     )
