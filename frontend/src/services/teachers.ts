@@ -15,7 +15,7 @@ export class TeacherService {
   }
 
   async createTeacher(teacher: Omit<Teacher, 'id'>): Promise<Teacher> {
-    return apiService.post<Teacher>('/teachers', teacher);
+    return apiService.post<Teacher>('/teachers/create', teacher);
   }
 
   async updateTeacher(id: string, teacher: Partial<Omit<Teacher, 'id'>>): Promise<Teacher> {

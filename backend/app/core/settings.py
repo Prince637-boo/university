@@ -63,8 +63,8 @@ class Settings(BaseSettings):
     MEDIA_UPLOAD_DIR: str = Field(default="app/media")
     
     # ===== CORS =====
-    # Format: "http://localhost:3000,http://127.0.0.1:3000"
-    ALLOWED_ORIGINS: str = Field(default="http://localhost:3000,http://127.0.0.1:3000")
+    # Format: "http://localhost:3000,http://127.0.0.1:3000,http://localhost,http://127.0.0.1"
+    ALLOWED_ORIGINS: str = Field(default="http://localhost:3000,http://127.0.0.1:3000,http://localhost,http://127.0.0.1")
     
     # ===== Environment =====
     ENVIRONMENT: str = Field(default="development")

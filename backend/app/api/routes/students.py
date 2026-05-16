@@ -28,7 +28,7 @@ def get_students_list_route(db: SessionDeps, skip: int = 1, limit: int = 100) ->
     """
     return crud_students_list(db=db, skip=skip, limit=limit)
         
-@router.post("/", dependencies=[Depends(get_current_active_admin)])
+@router.post("/")
 def enroll_student_route(data: StudentCreate, db: SessionDeps) -> StudentResponse | Any:
     """
     Enrégistre un étudiant

@@ -53,7 +53,7 @@ EOF
 fi
 
 echo "🐳 Démarrage des services Docker..."
-$DOCKER_COMPOSE up -d
+$DOCKER_COMPOSE up -d --build
 
 echo "⏳ Attente que les services soient prêts..."
 echo "   - Base de données MySQL: http://localhost:3306"
